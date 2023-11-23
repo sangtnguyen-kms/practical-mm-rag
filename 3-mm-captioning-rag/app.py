@@ -41,8 +41,10 @@ for file in glob.glob("./data/*"):
     documents.extend(loader.load_data(file, captioning=True))
 
 index = MultiModalVectorStoreIndex.from_documents(
-    documents, storage_context=storage_context, image_vector_store=image_store,
-    is_image_to_text=True
+    documents,
+    storage_context=storage_context,
+    image_vector_store=image_store,
+    is_image_to_text=True,
 )
 
 

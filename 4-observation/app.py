@@ -11,11 +11,9 @@ from llama_index.multi_modal_llms.openai import OpenAIMultiModal
 from llama_index.schema import ImageNode
 
 from llama_index.vector_stores.qdrant import QdrantVectorStore
-from llama_index import StorageContext, ServiceContext
+from llama_index import StorageContext
 from llama_index.indices.multi_modal.base import MultiModalVectorStoreIndex
 from llama_index.callbacks import CallbackManager
-
-from llama_index.query_engine.multi_modal import SimpleMultiModalQueryEngine
 
 import phoenix as px
 from phoenix.trace.llama_index import (
@@ -25,7 +23,6 @@ from phoenix.trace.llama_index import (
 
 from mm_pymu_pdf import PyMuPDFReader
 
-# To view traces in Phoenix, you will first have to start a Phoenix server. You can do this by running the following:
 session = px.launch_app()
 callback_handler = OpenInferenceTraceCallbackHandler()
 
@@ -55,8 +52,10 @@ for file in glob.glob("./data/*")[:1]:
     documents.extend(loader.load_data(file, captioning=True))
 
 index = MultiModalVectorStoreIndex.from_documents(
-    documents, storage_context=storage_context, image_vector_store=image_store,
-    is_image_to_text=True
+    documents,
+    storage_context=storage_context,
+    image_vector_store=image_store,
+    is_image_to_text=True,
 )
 
 

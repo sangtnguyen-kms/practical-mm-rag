@@ -15,9 +15,6 @@ from llama_index import StorageContext
 from llama_index.indices.multi_modal.base import MultiModalVectorStoreIndex
 
 
-from llama_index.query_engine.multi_modal import SimpleMultiModalQueryEngine
-
-
 from mm_pymu_pdf import PyMuPDFReader
 
 load_dotenv()
@@ -87,7 +84,7 @@ async def on_message(message):
     ]
 
     response_message = cl.Message(content="", elements=elements)
-    
+
     for token in response.response_gen:
         await response_message.stream_token(token=token.delta)
 

@@ -23,8 +23,10 @@ class PyMuPDFReader(BaseReader):
         """Loads list of documents from PDF file and also accepts
         extra information in dict format."""
         return self.load(
-            file_path, metadata=metadata, extra_info=extra_info,
-            captioning=captioning
+            file_path,
+            metadata=metadata,
+            extra_info=extra_info,
+            captioning=captioning,
         )
 
     def load(
@@ -55,8 +57,9 @@ class PyMuPDFReader(BaseReader):
 
         import fitz
         from openai import OpenAI
+
         client = OpenAI()
-        
+
         def encode_image(image_bytes):
             base64_image = base64.b64encode(image_bytes).decode("utf-8")
             return f"data:image/jpeg;base64,{base64_image}"
@@ -122,7 +125,7 @@ class PyMuPDFReader(BaseReader):
             normal_docs = [
                 Document(
                     text=page.get_text().encode("utf-8"),
-                    extra_info=extra_info or {}
+                    extra_info=extra_info or {},
                 )
                 for page in doc
             ]
@@ -138,8 +141,9 @@ class PyMuPDFReader(BaseReader):
             base64_image = encode_image(bytes_image)
             pil_image = Image.open(io.BytesIO(bytes_image))
 
-            with tempfile.\
-                    NamedTemporaryFile(suffix=".jpg", delete=False) as fp:
+            with tempfile.NamedTemporaryFile(
+                suffix=".jpg", delete=False
+            ) as fp:
                 pil_image.save(fp.name)
 
                 if captioning:
@@ -149,15 +153,12 @@ class PyMuPDFReader(BaseReader):
                         ImageDocument(
                             image=fp.name,
                             image_url=base64_image,
-                            text=image_caption
+                            text=image_caption,
                         )
                     )
                 else:
                     image_docs.append(
-                        ImageDocument(
-                            image=fp.name,
-                            image_url=base64_image
-                        )
+                        ImageDocument(image=fp.name, image_url=base64_image)
                     )
 
         return [*normal_docs, *image_docs]

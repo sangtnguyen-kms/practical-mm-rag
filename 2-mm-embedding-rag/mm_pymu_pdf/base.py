@@ -19,7 +19,7 @@ class PyMuPDFReader(BaseReader):
         metadata: bool = True,
         extra_info: Optional[Dict] = None,
     ) -> List[Document]:
-        """Loads list of documents from PDF file and also accepts 
+        """Loads list of documents from PDF file and also accepts
         extra information in dict format."""
         return self.load(file_path, metadata=metadata, extra_info=extra_info)
 
@@ -93,7 +93,7 @@ class PyMuPDFReader(BaseReader):
             normal_docs = [
                 Document(
                     text=page.get_text().encode("utf-8"),
-                    extra_info=extra_info or {}
+                    extra_info=extra_info or {},
                 )
                 for page in doc
             ]
@@ -103,22 +103,19 @@ class PyMuPDFReader(BaseReader):
             images.extend(page.get_images())
 
         image_docs = []
-        
+
         for image in images:
             bytes_image = doc.extract_image(image[0])["image"]
             base64_image = encode_image(bytes_image)
             pil_image = Image.open(io.BytesIO(bytes_image))
-            
+
             with tempfile.NamedTemporaryFile(
                 suffix=".jpg", delete=False
             ) as fp:
                 pil_image.save(fp.name)
-            
+
                 image_docs.append(
-                    ImageDocument(
-                        image=fp.name,
-                        image_url=base64_image
-                    )
+                    ImageDocument(image=fp.name, image_url=base64_image)
                 )
-                
+
         return [*normal_docs, *image_docs]
