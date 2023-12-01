@@ -37,7 +37,7 @@ loader = PyMuPDFReader()
 # Create the MultiModal index
 documents = []
 
-for file in glob.glob("./data/*"):
+for file in glob.glob("./data/*")[:1]:
     documents.extend(loader.load_data(file, captioning=True))
 
 index = MultiModalVectorStoreIndex.from_documents(

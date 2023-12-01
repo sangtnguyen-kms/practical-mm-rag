@@ -37,11 +37,14 @@ async def on_message(message):
     if not message.content:
         response = "What you want to do with this image?"
     else:
-        image_documents.append(
-            ImageDocument(
-                image_url=encode_image(images[0].content),
+        try:
+            image_documents.append(
+                ImageDocument(
+                    image_url=encode_image(images[0].content),
+                )
             )
-        )
+        except Exception:
+            pass
 
         cl.user_session.set("images", image_documents)
         response = mm_llm.stream_complete(
