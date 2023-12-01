@@ -13,6 +13,7 @@ from llama_index.schema import ImageNode
 from llama_index.vector_stores.qdrant import QdrantVectorStore
 from llama_index import StorageContext
 from llama_index.indices.multi_modal.base import MultiModalVectorStoreIndex
+from llama_index.callbacks.base import CallbackManager
 
 
 from mm_pymu_pdf import PyMuPDFReader
@@ -37,7 +38,7 @@ loader = PyMuPDFReader()
 # Create the MultiModal index
 documents = []
 
-for file in glob.glob("./data/*")[:1]:
+for file in glob.glob("./data/*"):
     documents.extend(loader.load_data(file, captioning=True))
 
 index = MultiModalVectorStoreIndex.from_documents(
@@ -59,7 +60,9 @@ async def on_start():
         model="gpt-4-vision-preview", temperature=0.8, max_new_tokens=300
     )
 
-    retriever = index.as_query_engine()
+    retriever = index.as_query_engine(
+        callback_manager=CallbackManager([cl.LlamaIndexCallbackHandler()])
+    )
 
     cl.user_session.set("retriever", retriever)
     cl.user_session.set("mm_llm", mm_llm)
