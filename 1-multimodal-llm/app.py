@@ -21,7 +21,7 @@ def encode_image(image_bytes):
 @cl.on_chat_start
 async def on_start():
     mm_llm = OpenAIMultiModal(
-        model="gpt-4-vision-preview", temperature=0.8, max_new_tokens=300
+        model="gpt-4-vision-preview", temperature=0.8, max_new_tokens=2000
     )
 
     cl.user_session.set("mm_llm", mm_llm)
@@ -47,7 +47,7 @@ async def on_message(message):
             pass
 
         cl.user_session.set("images", image_documents)
-        response = mm_llm.stream_complete(
+        response = mm_llm.stream_complete(  
             prompt=message.content, image_documents=image_documents
         )
 

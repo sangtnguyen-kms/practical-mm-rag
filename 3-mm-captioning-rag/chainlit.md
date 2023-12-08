@@ -4,8 +4,7 @@
 
 A chatbot that can understand project document (both text and diagram) such as database design, UI design,...
 
-### 2. Approach 1: One-for-all
+### 2. Approach 2: All-for-one
 
-CLIP embeddimg
+![](public/assets/approach.png)
 
-[Diagram go here]
